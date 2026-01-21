@@ -1,0 +1,57 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+.env/
+
+# Data files (too large for GitHub)
+data/*.csv
+data/*.zip
+*.csv
+
+# Model files (can be regenerated)
+models/*.joblib
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+notebooks/.ipynb_checkpoints/
+
+# IDE settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Screenshots (optional - uncomment if you want to include them)
+# screenshots/
+
+# Streamlit
+.streamlit/
+
+# pytest
+.pytest_cache/
+
+# Coverage reports
+htmlcov/
+.coverage
