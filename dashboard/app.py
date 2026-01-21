@@ -1,6 +1,6 @@
 """
-NIDS Interactive Dashboard
-==========================
+NIDS Interactive Dashboard - Improved Version
+==============================================
 A Streamlit-based dashboard for visualizing network intrusion detection.
 
 Features:
@@ -36,42 +36,195 @@ st.set_page_config(
 )
 
 # ============================================================
-# CUSTOM CSS
+# IMPROVED CUSTOM CSS
 # ============================================================
 st.markdown("""
 <style>
+    /* Main header styling */
     .main-header {
         font-size: 2.5rem;
         font-weight: bold;
-        color: #1E88E5;
+        background: linear-gradient(90deg, #1E88E5, #00C851);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
         text-align: center;
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
     }
+    
+    .sub-header {
+        text-align: center;
+        color: #888;
+        margin-bottom: 2rem;
+    }
+    
+    /* Metric cards with better visibility */
     .metric-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 1rem;
-        border-radius: 10px;
-        color: white;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        padding: 1.5rem;
+        border-radius: 15px;
         text-align: center;
+        border: 1px solid #0f3460;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
     }
+    
+    .metric-value {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #00ff88;
+        margin: 0.5rem 0;
+    }
+    
+    .metric-label {
+        font-size: 1rem;
+        color: #aaa;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .metric-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Attack alert styling - RED */
     .attack-alert {
-        background-color: #ff4444;
+        background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
         color: white;
-        padding: 10px;
-        border-radius: 5px;
-        margin: 5px 0;
+        padding: 12px 15px;
+        border-radius: 8px;
+        margin: 8px 0;
+        border-left: 5px solid #ff0000;
+        box-shadow: 0 2px 4px rgba(255, 0, 0, 0.3);
     }
+    
+    .attack-alert b {
+        color: #ffff00;
+    }
+    
+    .attack-alert small {
+        color: #ffcccc;
+        font-size: 0.85rem;
+    }
+    
+    /* Normal traffic styling - GREEN */
     .normal-traffic {
-        background-color: #00C851;
+        background: linear-gradient(135deg, #00C851 0%, #007E33 100%);
         color: white;
-        padding: 10px;
-        border-radius: 5px;
-        margin: 5px 0;
+        padding: 12px 15px;
+        border-radius: 8px;
+        margin: 8px 0;
+        border-left: 5px solid #00ff00;
+        box-shadow: 0 2px 4px rgba(0, 200, 81, 0.3);
     }
-    .stMetric {
-        background-color: #f0f2f6;
-        padding: 10px;
+    
+    .normal-traffic small {
+        color: #ccffcc;
+        font-size: 0.85rem;
+    }
+    
+    /* Threat level badges */
+    .threat-low {
+        background: linear-gradient(135deg, #00C851, #007E33);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-weight: bold;
+        font-size: 1.2rem;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0, 200, 81, 0.4);
+    }
+    
+    .threat-medium {
+        background: linear-gradient(135deg, #ffbb33, #ff8800);
+        color: #000;
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-weight: bold;
+        font-size: 1.2rem;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(255, 187, 51, 0.4);
+    }
+    
+    .threat-high {
+        background: linear-gradient(135deg, #ff4444, #cc0000);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-weight: bold;
+        font-size: 1.2rem;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(255, 68, 68, 0.4);
+        animation: pulse 1.5s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.7); }
+        70% { box-shadow: 0 0 0 15px rgba(255, 68, 68, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(255, 68, 68, 0); }
+    }
+    
+    /* Info boxes */
+    .info-box {
+        background: #1e3a5f;
+        border: 1px solid #2e5a8f;
         border-radius: 10px;
+        padding: 15px;
+        color: #fff;
+        margin: 10px 0;
+    }
+    
+    .info-box-title {
+        color: #00C851;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    
+    /* Performance metric boxes */
+    .perf-metric {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        border: 2px solid;
+        margin: 10px 0;
+    }
+    
+    .perf-metric.accuracy { border-color: #00C851; }
+    .perf-metric.precision { border-color: #1E88E5; }
+    .perf-metric.recall { border-color: #ffbb33; }
+    .perf-metric.f1 { border-color: #aa66cc; }
+    
+    .perf-value {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin: 10px 0;
+    }
+    
+    .perf-label {
+        color: #888;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+    }
+    
+    /* Sidebar styling */
+    .sidebar-status {
+        padding: 10px;
+        border-radius: 8px;
+        margin: 5px 0;
+        text-align: center;
+        font-weight: bold;
+    }
+    
+    .sidebar-status.online {
+        background-color: rgba(0, 200, 81, 0.2);
+        border: 1px solid #00C851;
+        color: #00C851;
+    }
+    
+    .sidebar-status.offline {
+        background-color: rgba(255, 68, 68, 0.2);
+        border: 1px solid #ff4444;
+        color: #ff4444;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -97,11 +250,14 @@ def load_model_and_preprocessors():
 # LOAD SAMPLE DATA
 # ============================================================
 @st.cache_data
-def load_sample_data(n_samples=10000):
-    """Load a sample of the dataset for visualization."""
+def load_sample_data(n_samples=50000):
+    """Load a RANDOM sample of the dataset for visualization."""
     data_file = "data/cicids2017_cleaned.csv"
     try:
-        df = pd.read_csv(data_file, nrows=n_samples)
+        # Load full dataset and take random sample to get all attack types
+        df = pd.read_csv(data_file, low_memory=False)
+        if len(df) > n_samples:
+            df = df.sample(n=n_samples, random_state=42)
         return df, True
     except FileNotFoundError:
         return None, False
@@ -127,8 +283,8 @@ def simulate_network_traffic(n_packets=20):
     attack_types = ['Normal Traffic', 'DoS', 'DDoS', 'Port Scanning', 
                     'Brute Force', 'Web Attacks', 'Bots']
     
-    # Weighted probabilities (mostly normal traffic)
-    weights = [0.83, 0.07, 0.05, 0.03, 0.01, 0.005, 0.005]
+    # Weighted probabilities
+    weights = [0.75, 0.10, 0.06, 0.04, 0.02, 0.02, 0.01]
     
     traffic = []
     base_time = datetime.now()
@@ -148,6 +304,25 @@ def simulate_network_traffic(n_packets=20):
     
     return pd.DataFrame(traffic)
 
+def render_metric_card(icon, value, label, color="#00ff88"):
+    """Render a custom metric card."""
+    return f"""
+    <div class="metric-card">
+        <div class="metric-icon">{icon}</div>
+        <div class="metric-value" style="color: {color};">{value}</div>
+        <div class="metric-label">{label}</div>
+    </div>
+    """
+
+def render_threat_level(level):
+    """Render threat level badge."""
+    if level < 3:
+        return '<div class="threat-low">🟢 LOW THREAT</div>'
+    elif level < 7:
+        return '<div class="threat-medium">🟡 MEDIUM THREAT</div>'
+    else:
+        return '<div class="threat-high">🔴 HIGH THREAT</div>'
+
 # ============================================================
 # MAIN DASHBOARD
 # ============================================================
@@ -155,7 +330,7 @@ def main():
     # Header
     st.markdown('<h1 class="main-header">🛡️ Network Intrusion Detection System</h1>', 
                 unsafe_allow_html=True)
-    st.markdown('<p style="text-align: center; color: gray;">Real-time AI-powered network security monitoring</p>', 
+    st.markdown('<p class="sub-header">Real-time AI-powered network security monitoring</p>', 
                 unsafe_allow_html=True)
     
     # Load model
@@ -165,8 +340,7 @@ def main():
     df, data_loaded = load_sample_data()
     
     # Sidebar
-    st.sidebar.image("https://img.icons8.com/fluency/96/security-checked.png", width=80)
-    st.sidebar.title("🎛️ Control Panel")
+    st.sidebar.markdown("## 🎛️ Control Panel")
     
     page = st.sidebar.radio(
         "Navigate",
@@ -174,50 +348,55 @@ def main():
     )
     
     st.sidebar.markdown("---")
-    st.sidebar.markdown("### System Status")
+    st.sidebar.markdown("### 📡 System Status")
     
     if model_loaded:
-        st.sidebar.success("✅ Model Loaded")
+        st.sidebar.markdown('<div class="sidebar-status online">✅ Model: ONLINE</div>', unsafe_allow_html=True)
     else:
-        st.sidebar.error("❌ Model Not Found")
-        st.sidebar.info("Run `python src/model_training.py` first")
+        st.sidebar.markdown('<div class="sidebar-status offline">❌ Model: OFFLINE</div>', unsafe_allow_html=True)
+        st.sidebar.caption("Run `python src/model_training.py`")
     
     if data_loaded:
-        st.sidebar.success("✅ Data Loaded")
+        st.sidebar.markdown('<div class="sidebar-status online">✅ Data: LOADED</div>', unsafe_allow_html=True)
     else:
-        st.sidebar.error("❌ Data Not Found")
+        st.sidebar.markdown('<div class="sidebar-status offline">❌ Data: NOT FOUND</div>', unsafe_allow_html=True)
+    
+    st.sidebar.markdown("---")
+    st.sidebar.markdown("### ℹ️ About")
+    st.sidebar.caption("NIDS v1.0 - Built with Scikit-learn, Streamlit & Plotly")
     
     # ============================================================
     # PAGE: DASHBOARD
     # ============================================================
     if page == "📊 Dashboard":
-        st.header("📊 Security Overview Dashboard")
+        st.markdown("## 📊 Security Overview Dashboard")
         
         if data_loaded:
-            # Top metrics
-            col1, col2, col3, col4 = st.columns(4)
-            
+            # Calculate metrics
             total_packets = len(df)
             attack_count = len(df[df['Attack Type'] != 'Normal Traffic'])
             normal_count = len(df[df['Attack Type'] == 'Normal Traffic'])
             attack_rate = (attack_count / total_packets) * 100
             
-            with col1:
-                st.metric("📦 Total Packets", f"{total_packets:,}")
-            with col2:
-                st.metric("✅ Normal Traffic", f"{normal_count:,}")
-            with col3:
-                st.metric("🚨 Attacks Detected", f"{attack_count:,}")
-            with col4:
-                st.metric("⚠️ Attack Rate", f"{attack_rate:.2f}%")
+            # Top metrics with custom cards
+            col1, col2, col3, col4 = st.columns(4)
             
-            st.markdown("---")
+            with col1:
+                st.markdown(render_metric_card("📦", f"{total_packets:,}", "Total Packets", "#00C851"), unsafe_allow_html=True)
+            with col2:
+                st.markdown(render_metric_card("✅", f"{normal_count:,}", "Normal Traffic", "#1E88E5"), unsafe_allow_html=True)
+            with col3:
+                st.markdown(render_metric_card("🚨", f"{attack_count:,}", "Attacks Detected", "#ff4444"), unsafe_allow_html=True)
+            with col4:
+                st.markdown(render_metric_card("⚠️", f"{attack_rate:.2f}%", "Attack Rate", "#ffbb33"), unsafe_allow_html=True)
+            
+            st.markdown("<br>", unsafe_allow_html=True)
             
             # Charts row
             col1, col2 = st.columns(2)
             
             with col1:
-                st.subheader("🎯 Attack Distribution")
+                st.markdown("### 🎯 Attack Distribution")
                 attack_counts = df['Attack Type'].value_counts()
                 
                 fig = px.pie(
@@ -235,11 +414,18 @@ def main():
                     },
                     hole=0.4
                 )
-                fig.update_layout(height=400)
+                fig.update_layout(
+                    height=400,
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    plot_bgcolor='rgba(0,0,0,0)',
+                    font_color='#fff',
+                    legend=dict(font=dict(color='#fff'))
+                )
+                fig.update_traces(textinfo='percent+label', textfont_size=12)
                 st.plotly_chart(fig, use_container_width=True)
             
             with col2:
-                st.subheader("📊 Attack Type Counts")
+                st.markdown("### 📊 Attack Type Counts")
                 
                 fig = px.bar(
                     x=attack_counts.index,
@@ -253,18 +439,25 @@ def main():
                         'Brute Force': '#ff8800',
                         'Web Attacks': '#aa66cc',
                         'Bots': '#0099CC'
-                    }
+                    },
+                    text=attack_counts.values
                 )
                 fig.update_layout(
                     height=400,
                     xaxis_title="Attack Type",
                     yaxis_title="Count",
-                    showlegend=False
+                    showlegend=False,
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    plot_bgcolor='rgba(0,0,0,0)',
+                    font_color='#fff',
+                    xaxis=dict(tickfont=dict(color='#fff')),
+                    yaxis=dict(tickfont=dict(color='#fff'), gridcolor='rgba(255,255,255,0.1)')
                 )
+                fig.update_traces(texttemplate='%{text:,}', textposition='outside')
                 st.plotly_chart(fig, use_container_width=True)
             
             # Attack details table
-            st.subheader("📋 Attack Summary Table")
+            st.markdown("### 📋 Attack Summary Table")
             summary = df['Attack Type'].value_counts().reset_index()
             summary.columns = ['Attack Type', 'Count']
             summary['Percentage'] = (summary['Count'] / total_packets * 100).round(2)
@@ -280,8 +473,8 @@ def main():
     # PAGE: LIVE MONITOR
     # ============================================================
     elif page == "🔴 Live Monitor":
-        st.header("🔴 Live Network Traffic Monitor")
-        st.markdown("*Simulated real-time network packet analysis*")
+        st.markdown("## 🔴 Live Network Traffic Monitor")
+        st.caption("Simulated real-time network packet analysis")
         
         # Controls
         col1, col2, col3 = st.columns(3)
@@ -290,27 +483,30 @@ def main():
         with col2:
             refresh_rate = st.slider("Refresh Rate (sec)", 1, 10, 3)
         with col3:
-            if st.button("🔄 Refresh Now"):
+            if st.button("🔄 Refresh Now", type="primary"):
                 st.rerun()
         
         # Simulate traffic
-        traffic_df = simulate_network_traffic(30)
+        traffic_df = simulate_network_traffic(25)
         
-        # Live stats
+        # Count attacks
+        attacks = traffic_df[traffic_df['attack_type'] != 'Normal Traffic']
+        attack_count = len(attacks)
+        
         st.markdown("---")
+        
+        # Live stats with custom cards
         col1, col2, col3, col4 = st.columns(4)
         
-        attacks = traffic_df[traffic_df['attack_type'] != 'Normal Traffic']
-        
         with col1:
-            st.metric("📡 Packets/sec", len(traffic_df))
+            st.markdown(render_metric_card("📡", str(len(traffic_df)), "Packets/sec", "#1E88E5"), unsafe_allow_html=True)
         with col2:
-            st.metric("🚨 Threats Detected", len(attacks))
+            color = "#ff4444" if attack_count > 0 else "#00C851"
+            st.markdown(render_metric_card("🚨", str(attack_count), "Threats", color), unsafe_allow_html=True)
         with col3:
-            st.metric("🌐 Unique Sources", traffic_df['src_ip'].nunique())
+            st.markdown(render_metric_card("🌐", str(traffic_df['src_ip'].nunique()), "Unique IPs", "#aa66cc"), unsafe_allow_html=True)
         with col4:
-            threat_level = "🟢 LOW" if len(attacks) < 3 else ("🟡 MEDIUM" if len(attacks) < 7 else "🔴 HIGH")
-            st.metric("⚠️ Threat Level", threat_level)
+            st.markdown(render_threat_level(attack_count), unsafe_allow_html=True)
         
         st.markdown("---")
         
@@ -318,7 +514,7 @@ def main():
         col1, col2 = st.columns([2, 1])
         
         with col1:
-            st.subheader("📜 Live Traffic Feed")
+            st.markdown("### 📜 Live Traffic Feed")
             
             for _, packet in traffic_df.iterrows():
                 is_attack = packet['attack_type'] != 'Normal Traffic'
@@ -326,26 +522,26 @@ def main():
                 if is_attack:
                     st.markdown(f"""
                     <div class="attack-alert">
-                        🚨 <b>ALERT:</b> {packet['attack_type']} detected!<br>
-                        <small>{packet['timestamp'].strftime('%H:%M:%S')} | 
-                        {packet['src_ip']}:{packet['src_port']} → 
-                        {packet['dst_ip']}:{packet['dst_port']} | 
-                        {packet['protocol']} | {packet['bytes']} bytes</small>
+                        🚨 <b>ALERT: {packet['attack_type']} detected!</b><br>
+                        <small>🕐 {packet['timestamp'].strftime('%H:%M:%S')} | 
+                        📤 {packet['src_ip']}:{packet['src_port']} → 
+                        📥 {packet['dst_ip']}:{packet['dst_port']} | 
+                        📡 {packet['protocol']} | 📊 {packet['bytes']:,} bytes</small>
                     </div>
                     """, unsafe_allow_html=True)
                 else:
                     st.markdown(f"""
                     <div class="normal-traffic">
-                        ✅ Normal Traffic<br>
-                        <small>{packet['timestamp'].strftime('%H:%M:%S')} | 
-                        {packet['src_ip']}:{packet['src_port']} → 
-                        {packet['dst_ip']}:{packet['dst_port']} | 
-                        {packet['protocol']} | {packet['bytes']} bytes</small>
+                        ✅ <b>Normal Traffic</b><br>
+                        <small>🕐 {packet['timestamp'].strftime('%H:%M:%S')} | 
+                        📤 {packet['src_ip']}:{packet['src_port']} → 
+                        📥 {packet['dst_ip']}:{packet['dst_port']} | 
+                        📡 {packet['protocol']} | 📊 {packet['bytes']:,} bytes</small>
                     </div>
                     """, unsafe_allow_html=True)
         
         with col2:
-            st.subheader("🎯 Attack Types Detected")
+            st.markdown("### 🎯 Traffic Breakdown")
             attack_summary = traffic_df['attack_type'].value_counts()
             
             fig = px.pie(
@@ -362,10 +558,22 @@ def main():
                     'Bots': '#0099CC'
                 }
             )
-            fig.update_layout(height=300, showlegend=True)
+            fig.update_layout(
+                height=350,
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                font_color='#fff',
+                legend=dict(font=dict(color='#fff', size=10))
+            )
             st.plotly_chart(fig, use_container_width=True)
+            
+            # Attack breakdown
+            st.markdown("#### 📊 Counts")
+            for attack_type, count in attack_summary.items():
+                color = get_attack_color(attack_type)
+                pct = count / len(traffic_df) * 100
+                st.markdown(f"<span style='color:{color};font-weight:bold;'>{attack_type}</span>: {count} ({pct:.1f}%)", unsafe_allow_html=True)
         
-        # Auto refresh
         if auto_refresh:
             time.sleep(refresh_rate)
             st.rerun()
@@ -374,39 +582,79 @@ def main():
     # PAGE: MODEL PERFORMANCE
     # ============================================================
     elif page == "📈 Model Performance":
-        st.header("📈 Model Performance Metrics")
+        st.markdown("## 📈 Model Performance Metrics")
         
         if model_loaded:
             # Model info
-            st.subheader("🤖 Model Information")
+            st.markdown("### 🤖 Model Information")
             col1, col2, col3 = st.columns(3)
             
             with col1:
-                st.info("**Model Type:** Random Forest")
+                st.markdown("""
+                <div class="info-box">
+                    <div class="info-box-title">Model Type</div>
+                    <div style="font-size: 1.3rem;">🌲 Random Forest</div>
+                </div>
+                """, unsafe_allow_html=True)
             with col2:
-                st.info(f"**Number of Trees:** {model.n_estimators}")
+                st.markdown(f"""
+                <div class="info-box">
+                    <div class="info-box-title">Number of Trees</div>
+                    <div style="font-size: 1.3rem;">🌳 {model.n_estimators}</div>
+                </div>
+                """, unsafe_allow_html=True)
             with col3:
-                st.info(f"**Features Used:** {len(feature_names)}")
+                st.markdown(f"""
+                <div class="info-box">
+                    <div class="info-box-title">Features Used</div>
+                    <div style="font-size: 1.3rem;">📊 {len(feature_names)}</div>
+                </div>
+                """, unsafe_allow_html=True)
             
             st.markdown("---")
             
-            # Performance metrics (from training)
-            st.subheader("📊 Performance Metrics")
+            # Performance metrics
+            st.markdown("### 📊 Performance Metrics")
             
             col1, col2, col3, col4 = st.columns(4)
+            
             with col1:
-                st.metric("🎯 Accuracy", "93.13%", "Target: 95%")
+                st.markdown("""
+                <div class="perf-metric accuracy">
+                    <div class="perf-label">🎯 Accuracy</div>
+                    <div class="perf-value" style="color: #00C851;">93.13%</div>
+                    <div style="color: #888;">Target: 95%</div>
+                </div>
+                """, unsafe_allow_html=True)
             with col2:
-                st.metric("📌 Precision", "97.56%", "+2.56%")
+                st.markdown("""
+                <div class="perf-metric precision">
+                    <div class="perf-label">📌 Precision</div>
+                    <div class="perf-value" style="color: #1E88E5;">97.56%</div>
+                    <div style="color: #00C851;">+2.56% ▲</div>
+                </div>
+                """, unsafe_allow_html=True)
             with col3:
-                st.metric("🔍 Recall", "93.13%", "-1.87%")
+                st.markdown("""
+                <div class="perf-metric recall">
+                    <div class="perf-label">🔍 Recall</div>
+                    <div class="perf-value" style="color: #ffbb33;">93.13%</div>
+                    <div style="color: #ff4444;">-1.87% ▼</div>
+                </div>
+                """, unsafe_allow_html=True)
             with col4:
-                st.metric("⚖️ F1-Score", "95.06%", "✅ Target Met")
+                st.markdown("""
+                <div class="perf-metric f1">
+                    <div class="perf-label">⚖️ F1-Score</div>
+                    <div class="perf-value" style="color: #aa66cc;">95.06%</div>
+                    <div style="color: #00C851;">✅ Target Met</div>
+                </div>
+                """, unsafe_allow_html=True)
             
             st.markdown("---")
             
             # Per-class performance
-            st.subheader("📋 Per-Class Performance")
+            st.markdown("### 📋 Per-Class Performance")
             
             performance_data = {
                 'Attack Type': ['Bots', 'Brute Force', 'DDoS', 'DoS', 'Normal Traffic', 'Port Scanning', 'Web Attacks'],
@@ -417,28 +665,36 @@ def main():
             }
             perf_df = pd.DataFrame(performance_data)
             
-            # Heatmap-style visualization
+            # Bar chart
             fig = go.Figure()
             
-            for i, metric in enumerate(['Precision', 'Recall', 'F1-Score']):
+            colors = {'Precision': '#1E88E5', 'Recall': '#00C851', 'F1-Score': '#aa66cc'}
+            
+            for metric in ['Precision', 'Recall', 'F1-Score']:
                 fig.add_trace(go.Bar(
                     name=metric,
                     x=perf_df['Attack Type'],
                     y=perf_df[metric],
                     text=[f"{v:.0%}" for v in perf_df[metric]],
                     textposition='auto',
+                    marker_color=colors[metric]
                 ))
             
             fig.update_layout(
                 barmode='group',
-                height=400,
+                height=450,
                 xaxis_title="Attack Type",
                 yaxis_title="Score",
-                yaxis_range=[0, 1.1]
+                yaxis_range=[0, 1.15],
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                font_color='#fff',
+                legend=dict(font=dict(color='#fff')),
+                xaxis=dict(tickfont=dict(color='#fff')),
+                yaxis=dict(tickfont=dict(color='#fff'), gridcolor='rgba(255,255,255,0.1)')
             )
             st.plotly_chart(fig, use_container_width=True)
             
-            # Table view
             st.dataframe(perf_df.style.format({
                 'Precision': '{:.0%}',
                 'Recall': '{:.0%}',
@@ -453,56 +709,67 @@ def main():
     # PAGE: FEATURE ANALYSIS
     # ============================================================
     elif page == "🔍 Feature Analysis":
-        st.header("🔍 Feature Importance Analysis")
+        st.markdown("## 🔍 Feature Importance Analysis")
+        st.caption("Which network features are most important for detecting attacks?")
         
         if model_loaded:
-            st.markdown("*Which network features are most important for detecting attacks?*")
-            
-            # Get feature importance
             importance_df = pd.DataFrame({
                 'Feature': feature_names,
                 'Importance': model.feature_importances_
             }).sort_values('Importance', ascending=True)
             
-            # Top 15 features
             top_features = importance_df.tail(15)
             
-            # Horizontal bar chart
             fig = px.bar(
                 top_features,
                 x='Importance',
                 y='Feature',
                 orientation='h',
                 color='Importance',
-                color_continuous_scale='Viridis'
+                color_continuous_scale='Viridis',
+                text=[f"{v:.3f}" for v in top_features['Importance']]
             )
             fig.update_layout(
-                height=500,
+                height=550,
                 title="Top 15 Most Important Features",
                 xaxis_title="Importance Score",
-                yaxis_title="Feature"
+                yaxis_title="Feature",
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                font_color='#fff',
+                xaxis=dict(tickfont=dict(color='#fff'), gridcolor='rgba(255,255,255,0.1)'),
+                yaxis=dict(tickfont=dict(color='#fff'))
             )
+            fig.update_traces(textposition='outside')
             st.plotly_chart(fig, use_container_width=True)
             
-            # Feature descriptions
-            st.subheader("📖 Feature Descriptions")
+            st.markdown("### 📖 Feature Descriptions")
             
             feature_descriptions = {
-                'Destination Port': 'Target port number - key indicator of attack type',
-                'Init_Win_bytes_backward': 'TCP window size in backward direction',
-                'Packet Length Mean': 'Average size of packets in the flow',
-                'Max Packet Length': 'Largest packet in the flow',
-                'Subflow Fwd Bytes': 'Total bytes sent in forward direction',
-                'Total Length of Fwd Packets': 'Sum of all forward packet sizes',
-                'Average Packet Size': 'Mean packet size across the flow',
-                'Fwd Packet Length Mean': 'Average forward packet size',
-                'Flow IAT Max': 'Maximum inter-arrival time between packets',
-                'Flow Packets/s': 'Packet rate per second'
+                'Destination Port': '🔌 Target port number - key indicator of attack type',
+                'Init_Win_bytes_backward': '📊 TCP window size in backward direction',
+                'Packet Length Mean': '📏 Average size of packets in the flow',
+                'Max Packet Length': '📐 Largest packet in the flow',
+                'Subflow Fwd Bytes': '➡️ Total bytes sent in forward direction',
+                'Total Length of Fwd Packets': '📦 Sum of all forward packet sizes',
+                'Average Packet Size': '📊 Mean packet size across the flow',
+                'Fwd Packet Length Mean': '➡️ Average forward packet size',
+                'Flow IAT Max': '⏱️ Maximum inter-arrival time between packets',
+                'Flow Packets/s': '🚀 Packet rate per second'
             }
             
-            for feature in top_features.tail(10)['Feature'].values[::-1]:
+            col1, col2 = st.columns(2)
+            features_list = list(top_features.tail(10)['Feature'].values[::-1])
+            
+            for i, feature in enumerate(features_list):
+                col = col1 if i < 5 else col2
                 if feature in feature_descriptions:
-                    st.markdown(f"**{feature}**: {feature_descriptions[feature]}")
+                    col.markdown(f"""
+                    <div class="info-box">
+                        <div class="info-box-title">{feature}</div>
+                        <div>{feature_descriptions[feature]}</div>
+                    </div>
+                    """, unsafe_allow_html=True)
         else:
             st.warning("⚠️ Model not loaded. Run training first.")
     
@@ -510,56 +777,88 @@ def main():
     # PAGE: TEST PREDICTION
     # ============================================================
     elif page == "🎯 Test Prediction":
-        st.header("🎯 Test Attack Prediction")
+        st.markdown("## 🎯 Test Attack Prediction")
+        st.caption("Select a sample from the dataset to see the model's prediction")
         
         if model_loaded and data_loaded:
-            st.markdown("*Select a sample from the dataset to see the model's prediction*")
+            col1, col2 = st.columns([3, 1])
+            with col1:
+                sample_idx = st.slider("Select Sample Index", 0, len(df)-1, 100)
+            with col2:
+                if st.button("🎲 Random Sample", type="primary"):
+                    sample_idx = random.randint(0, len(df)-1)
             
-            # Sample selector
-            sample_idx = st.slider("Select Sample Index", 0, len(df)-1, 0)
-            
-            # Get sample
             sample = df.iloc[sample_idx]
             actual_label = sample['Attack Type']
             
-            # Prepare features for prediction
             feature_values = sample[feature_names].values.reshape(1, -1)
             scaled_features = scaler.transform(feature_values)
             
-            # Predict
             prediction = model.predict(scaled_features)[0]
             probabilities = model.predict_proba(scaled_features)[0]
             predicted_label = label_mapping[prediction]
             
-            # Display results
+            st.markdown("---")
+            
             col1, col2 = st.columns(2)
             
             with col1:
-                st.subheader("📥 Input Features")
-                st.json({name: f"{value:.4f}" for name, value in zip(feature_names[:10], sample[feature_names].values[:10])})
-                st.caption("Showing first 10 features...")
+                st.markdown("### 📥 Input Features")
+                
+                feature_data = {name: f"{value:.4f}" for name, value in zip(feature_names[:12], sample[feature_names].values[:12])}
+                
+                for name, value in feature_data.items():
+                    st.markdown(f"""
+                    <div style="background: #1a1a2e; padding: 8px 12px; margin: 3px 0; border-radius: 5px; border-left: 3px solid #1E88E5;">
+                        <span style="color: #888;">{name}:</span> <span style="color: #00C851; font-weight: bold;">{value}</span>
+                    </div>
+                    """, unsafe_allow_html=True)
+                
+                st.caption("Showing first 12 of 52 features...")
             
             with col2:
-                st.subheader("📤 Prediction Result")
+                st.markdown("### 📤 Prediction Result")
                 
-                # Actual vs Predicted
-                if actual_label == predicted_label:
-                    st.success(f"✅ **Correct Prediction!**")
+                is_correct = actual_label == predicted_label
+                
+                if is_correct:
+                    st.markdown("""
+                    <div style="background: linear-gradient(135deg, #00C851, #007E33); padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 20px;">
+                        <div style="font-size: 2rem;">✅</div>
+                        <div style="font-size: 1.2rem; font-weight: bold; color: white;">Correct Prediction!</div>
+                    </div>
+                    """, unsafe_allow_html=True)
                 else:
-                    st.error(f"❌ **Incorrect Prediction**")
+                    st.markdown("""
+                    <div style="background: linear-gradient(135deg, #ff4444, #cc0000); padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 20px;">
+                        <div style="font-size: 2rem;">❌</div>
+                        <div style="font-size: 1.2rem; font-weight: bold; color: white;">Incorrect Prediction</div>
+                    </div>
+                    """, unsafe_allow_html=True)
                 
-                st.markdown(f"**Actual:** {actual_label}")
-                st.markdown(f"**Predicted:** {predicted_label}")
+                actual_color = "#00C851" if actual_label == "Normal Traffic" else "#ff4444"
+                pred_color = "#00C851" if predicted_label == "Normal Traffic" else "#ff4444"
                 
-                # Confidence
+                st.markdown(f"""
+                <div class="info-box">
+                    <div><span style="color: #888;">Actual:</span> <span style="color: {actual_color}; font-weight: bold; font-size: 1.1rem;">{actual_label}</span></div>
+                    <div style="margin-top: 10px;"><span style="color: #888;">Predicted:</span> <span style="color: {pred_color}; font-weight: bold; font-size: 1.1rem;">{predicted_label}</span></div>
+                </div>
+                """, unsafe_allow_html=True)
+                
                 confidence = probabilities[prediction] * 100
-                st.markdown(f"**Confidence:** {confidence:.2f}%")
+                conf_color = "#00C851" if confidence > 70 else ("#ffbb33" if confidence > 40 else "#ff4444")
                 
-                # Progress bar for confidence
+                st.markdown(f"""
+                <div class="info-box" style="margin-top: 15px;">
+                    <div class="info-box-title">Confidence Level</div>
+                    <div style="font-size: 2rem; font-weight: bold; color: {conf_color};">{confidence:.1f}%</div>
+                </div>
+                """, unsafe_allow_html=True)
+                
                 st.progress(probabilities[prediction])
             
-            # Probability distribution
-            st.subheader("📊 Prediction Probabilities")
+            st.markdown("### 📊 Prediction Probabilities")
             
             prob_df = pd.DataFrame({
                 'Attack Type': [label_mapping[i] for i in range(len(probabilities))],
@@ -572,9 +871,18 @@ def main():
                 y='Attack Type',
                 orientation='h',
                 color='Probability',
-                color_continuous_scale='RdYlGn'
+                color_continuous_scale='RdYlGn',
+                text=[f"{p:.1%}" for p in prob_df['Probability']]
             )
-            fig.update_layout(height=300)
+            fig.update_layout(
+                height=350,
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                font_color='#fff',
+                xaxis=dict(tickfont=dict(color='#fff'), gridcolor='rgba(255,255,255,0.1)', tickformat='.0%'),
+                yaxis=dict(tickfont=dict(color='#fff'))
+            )
+            fig.update_traces(textposition='outside')
             st.plotly_chart(fig, use_container_width=True)
             
         else:
@@ -583,8 +891,8 @@ def main():
     # Footer
     st.markdown("---")
     st.markdown(
-        '<p style="text-align: center; color: gray;">🛡️ NIDS - Network Intrusion Detection System | '
-        'Built with Scikit-learn & Streamlit</p>',
+        '<p style="text-align: center; color: #666;">🛡️ NIDS v1.0 - Network Intrusion Detection System | '
+        'Built with Scikit-learn, Streamlit & Plotly | © 2026</p>',
         unsafe_allow_html=True
     )
 
